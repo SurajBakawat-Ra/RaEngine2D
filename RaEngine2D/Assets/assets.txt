@@ -1,0 +1,32 @@
+Texture     megaSTAND       Assets/images/megaman/megaStand.png
+Texture     megaSHOT        Assets/images/megaman/megaShot.png
+Texture     megaRUN         Assets/images/megaman/megaRun.png
+Texture     megaJUMP        Assets/images/megaman/megaJump.png
+Texture     megaBuster      Assets/images/megaman/megaBuster.png
+Texture     marioBRICK      Assets/images/mario/ground.png
+Texture     marioCLOUD      Assets/images/mario/SmallCloud.png
+Texture     marioExplosion  Assets/images/animations/explosion.png
+Texture     marioBUSH       Assets/images/mario/BigBush.png
+Texture     marioSMALLBUSH  Assets/images/mario/SmallBush.png
+Texture     marioBOOMBA     Assets/images/mario/GoombaWalk.png
+Texture     marioBUSHER     Assets/images/mario/Busher.png
+Texture     marioPIPE       Assets/images/mario/SmallPipe.png
+Texture     marioBCLOUD     Assets/images/mario/BigCloud.png
+Texture     marioGOODEATH   Assets/images/mario/GoombaDeath.png
+Animation   STAND           megaSTAND         1   1
+Animation   AniBRICK        marioBRICK        1   1
+Animation   RUN             megaRUN           3   8 
+Animation   JUMP            megaJUMP          1   1
+Animation   SHOT            megaSHOT          1   1
+Animation   AniBUSH         marioBUSH         1   1
+Animation   BUSTER          megaBuster        1   1
+Animation   AniCLOUDSMALL   marioCLOUD        1   1
+Animation   EXPLOSION       marioExplosion    12  8
+Animation   aniSMALLBUSH    marioSMALLBUSH    1   1
+Animation   aniPIPE         marioPIPE         1   1
+Animation   aniBUSHER       marioBUSHER       1   1
+Animation   aniGOOMBA       marioBOOMBA       2   8
+Animation   aniBCLOUD       marioBCLOUD       1   1
+Animation   aniGOODEATH     marioGOODEATH     2   6 
+Font        NUMBERS         Assets/fonts/numbers.ttf
+Font        PIXEL           Assets/fonts/pixeled.ttf

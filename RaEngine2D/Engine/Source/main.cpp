@@ -1,4 +1,6 @@
 #include "GameEngine.h"
-int main() {
+
+int main() 
+{
 	GameEngine::Instance()->run();
 }

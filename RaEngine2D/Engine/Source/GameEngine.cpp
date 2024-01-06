@@ -49,9 +49,9 @@ void GameEngine::sUserInput()
         sf::Texture texture;
         texture.create(m_window.getSize().x, m_window.getSize().y);
         texture.update(m_window);
-        if (texture.copyToImage().saveToFile("bin/screenshots/test.png"))
+        if (texture.copyToImage().saveToFile("Assets/screenshots/test.png"))
           std::cout << "screenshot saved to "
-                    << "bin/screenshots/test.png" << std::endl;
+                    << "Assets/screenshots/test.png" << std::endl;
       }
     }
     if (event.type == sf::Event::KeyPressed ||
@@ -79,7 +79,7 @@ GameEngine* GameEngine::Instance()
     {
         m_Instance = new GameEngine();
 
-        m_Instance->init("bin/assets.txt");
+        m_Instance->init("Assets/assets.txt");
 
         return m_Instance;
     }
