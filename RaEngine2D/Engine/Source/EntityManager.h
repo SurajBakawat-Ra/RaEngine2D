@@ -4,29 +4,29 @@
 #include "Entity.h"
 typedef std::vector<std::shared_ptr<Entity>> EntityVec;
 
-class EntityManager 
+class EntityManager
 {
-  private:
+private:
 
-  EntityVec m_entities;
-  EntityVec m_entitiesToAdd;
-  std::map<std::string, EntityVec> m_entityMap;
-  size_t    m_totalEntities{ 0 };
+	EntityVec m_entities;
+	EntityVec m_entitiesToAdd;
+	std::map<std::string, EntityVec> m_entityMap;
+	size_t    m_totalEntities{ 0 };
 
-  // helper function to avoid repeated code
-  void removeDeadEntities(EntityVec &vec);
+	// helper function to avoid repeated code
+	void removeDeadEntities(EntityVec& vec);
 
-  EntityManager();
+	EntityManager();
 
-  friend class GameEngine;
+	friend class GameEngine;
 
-  public:
+public:
 
 
-  void update();
+	void update();
 
-  std::shared_ptr<Entity> addEntity(std::string entities);
+	std::shared_ptr<Entity> addEntity(std::string entities);
 
-  EntityVec &getEntities();
-  EntityVec &getEntities(std::string type);
+	EntityVec& getEntities();
+	EntityVec& getEntities(std::string type);
 };

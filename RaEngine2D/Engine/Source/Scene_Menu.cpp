@@ -6,59 +6,74 @@
 
 Scene_Menu::Scene_Menu() : Scene() { init(""); }
 
-void Scene_Menu::init(const std::string &menuConfig) {
+void Scene_Menu::init(const std::string& menuConfig)
+{
     GameEngine::Instance()->window().setKeyRepeatEnabled(false);
-  m_menuText.setFont(GameEngine::Instance()->getAssets().getFont("PIXEL"));
-  m_title = "Not Mario";
-  m_menuStrings.emplace_back("Play 1");
-  m_menuStrings.emplace_back("Play 2");
-  m_menuStrings.emplace_back("Play 3");
+    m_menuText.setFont(GameEngine::Instance()->getAssets().getFont("PIXEL"));
+    m_title = "Not Mario";
+    m_menuStrings.emplace_back("Play 1");
+    m_menuStrings.emplace_back("Play 2");
+    m_menuStrings.emplace_back("Play 3");
 }
 
-void Scene_Menu::update() {
-  sRender();
-  GameEngine::Instance()->entityManager.update();
-  sUserInput();
+void Scene_Menu::update()
+{
+    sRender();
+    GameEngine::Instance()->entityManager.update();
+    sUserInput();
 }
 
-void Scene_Menu::sUserInput() {
-  sf::Event event{};
-  while (GameEngine::Instance()->window().pollEvent(event)) {
-    if (event.type == sf::Event::Closed) {
-        GameEngine::Instance()->quit();
-    }
-    // this event is triggered when a key is pressed
-    if (event.type == sf::Event::KeyPressed) {
-      switch (event.key.code) {
-      case sf::Keyboard::Escape: {
-          GameEngine::Instance()->quit();
-        break;
-      }
-      case sf::Keyboard::W: {
-        if (m_selectedMenuIndex > 0) {
-          m_selectedMenuIndex--;
-        } else {
-          m_selectedMenuIndex = m_menuStrings.size() - 1;
+void Scene_Menu::sUserInput()
+{
+    sf::Event event{};
+    while (GameEngine::Instance()->window().pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+        {
+            GameEngine::Instance()->quit();
         }
-        break;
-      }
-      case sf::Keyboard::S: {
-        m_selectedMenuIndex = (m_selectedMenuIndex + 1) % m_menuStrings.size();
-        break;
-      }
-      case sf::Keyboard::D: {
-          GameEngine::Instance()->changeScene("PLAY", std::make_shared<Scene_Play>());
-        break;
-      }
-      default: {
-        break;
-      }
-      }
+        // this event is triggered when a key is pressed
+        if (event.type == sf::Event::KeyPressed)
+        {
+            switch (event.key.code)
+            {
+            case sf::Keyboard::Escape:
+            {
+                GameEngine::Instance()->quit();
+                break;
+            }
+            case sf::Keyboard::W:
+            {
+                if (m_selectedMenuIndex > 0)
+                {
+                    m_selectedMenuIndex--;
+                }
+                else
+                {
+                    m_selectedMenuIndex = m_menuStrings.size() - 1;
+                }
+                break;
+            }
+            case sf::Keyboard::S:
+            {
+                m_selectedMenuIndex = (m_selectedMenuIndex + 1) % m_menuStrings.size();
+                break;
+            }
+            case sf::Keyboard::D:
+            {
+                GameEngine::Instance()->changeScene("PLAY", std::make_shared<Scene_Play>());
+                break;
+            }
+            default:
+            {
+                break;
+            }
+            }
+        }
     }
-  }
 }
 
-void Scene_Menu::sRender() 
+void Scene_Menu::sRender()
 {
     GameEngine::Instance()->window().clear(sf::Color(100, 27, 0));
     // drawing the game title in the top-left of the screen
@@ -79,13 +94,10 @@ void Scene_Menu::sRender()
         GameEngine::Instance()->window().draw(m_menuText);
     }
 
-    m_menuText.setString(
-        "Left :  A        S :  Down        Up : W        D : Do");
+    m_menuText.setString("Left :  A        S :  Down        Up : W        D : Do");
     m_menuText.setFillColor(sf::Color::Black);
     m_menuText.setCharacterSize(12);
-    m_menuText.setPosition(
-        sf::Vector2f(m_menuText.getCharacterSize(),
-            height() - m_menuText.getCharacterSize() * 2));
+    m_menuText.setPosition(sf::Vector2f(m_menuText.getCharacterSize(), height() - m_menuText.getCharacterSize() * 2));
     GameEngine::Instance()->window().draw(m_menuText);
 
     GameEngine::Instance()->window().display();
@@ -93,4 +105,4 @@ void Scene_Menu::sRender()
 
 void Scene_Menu::onEnd() {}
 
-void Scene_Menu::sDoAction(const InputAction &action) {}
+void Scene_Menu::sDoAction(const InputAction& action) {}

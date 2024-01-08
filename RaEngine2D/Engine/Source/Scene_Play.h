@@ -7,7 +7,8 @@
 #include <map>
 #include <memory>
 
-class Scene_Play : public Scene {
+class Scene_Play : public Scene
+{
 
 public:
 	std::string m_title;

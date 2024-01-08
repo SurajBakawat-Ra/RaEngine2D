@@ -7,143 +7,77 @@
 #include <SFML/Window/WindowHandle.hpp>
 #include <iostream>
 #include "Physics.h"
+#include "Transform.h"
 
 GameEngine* GameEngine::m_Instance = nullptr;
 
-void GameEngine::update() 
+void GameEngine::update()
 {
     sUserInput();
     m_sceneMap.at(m_currentScene)->update();
+
+    Transform t;
+    t.update();
+
     m_currentFrames++;
-
-    for (auto& e : GameEngine::Instance()->entityManager.getEntities())
-    {
-        if (e->hasComponent<CRigidbody>())
-        {
-            auto& rigidbody = e->getComponent<CRigidbody>();
-            rigidbody.rigidbody.update();
-        }
-    }
-
-    Physics physics;
-
-    for (auto& e : GameEngine::Instance()->entityManager.getEntities())
-    {
-        for (auto& e2 : GameEngine::Instance()->entityManager.getEntities())
-        {
-            if (e->id() != e2->id() && (physics.GetOverlap(e, e2).x > 0.f && physics.GetOverlap(e, e2).y > 0.f))
-            {
-				//std::string s = std::to_string(e->id()) + " " + std::to_string(e2->id()) + " " + std::to_string(e->getComponent<CTransform>().getPos().x) + " " + std::to_string(e->getComponent<CTransform>().getPos().y)
-    //                + " " + std::to_string(e2->getComponent<CTransform>().getPos().x) + " " + std::to_string(e2->getComponent<CTransform>().getPos().y) + " " +
-    //                std::to_string(physics.GetOverlap(e, e2).x) + " " + std::to_string(physics.GetOverlap(e, e2).y);
-				//std::cout << s;
-
-                bool xOverlap = false;
-                bool yOverlap = false;
-
-                if (physics.GetPreviousOverlap(e, e2).x > 0.f)
-                {
-                    yOverlap = true;
-                }  
-                else
-                {
-                    xOverlap = true;
-                }
-
-                if (yOverlap)
-                {
-					auto& transform = e->getComponent<CTransform>();
-                    transform.SetPosition(transform.getPrevPos());
-                    transform.velocity.y = 0.f;
-
-                }
-
-                if (xOverlap)
-                {
-                    auto& transform = e->getComponent<CTransform>();
-                    transform.SetPosition(transform.getPrevPos());
-                    transform.velocity.x = 0.f;
-                }
-            }
-        }
-    }
-
-    if (true)//gravity
-    {
-        for (auto& e : GameEngine::Instance()->entityManager.getEntities())
-        {
-            auto& transform = e->getComponent<CTransform>();
-            if (e->hasComponent<CAnimation>()) {
-                auto& animation = e->getComponent<CAnimation>().animation;
-
-                if (transform.velocity != Vec2(0.f, 0.f))
-                {
-                    transform.SetPosition(Vec2(transform.getPos().x + transform.velocity.x, transform.getPos().y + transform.velocity.y));
-                }
-
-                animation.getSprite().setRotation(transform.angle);
-                animation.getSprite().setPosition(transform.getPos().x, transform.getPos().y);
-                animation.getSprite().setScale(transform.scale.x, transform.scale.y);
-            }
-        }
-    }
-
 }
 
-void GameEngine::init(const std::string &path) {
-  m_assets.loadFromFile(path);
-  m_window.create(sf::VideoMode(1280, 770), "Definitely Not Mario");
-  //, sf::Style::Fullscreen);
-  m_window.setFramerateLimit(60);
-  // m_window.setPosition(sf::Vector2i(350, 200));
-  changeScene("MENU", std::make_shared<Scene_Menu>());
+void GameEngine::init(const std::string& path)
+{
+    m_assets.loadFromFile(path);
+    m_window.create(sf::VideoMode(1280, 770), "Definitely Not Mario");
+    //, sf::Style::Fullscreen);
+    m_window.setFramerateLimit(60);
+    // m_window.setPosition(sf::Vector2i(350, 200));
+    changeScene("MENU", std::make_shared<Scene_Menu>());
 }
 
-std::shared_ptr<Scene> GameEngine::currentScene() {
-  return m_sceneMap[m_currentScene];
+std::shared_ptr<Scene> GameEngine::currentScene()
+{
+    return m_sceneMap[m_currentScene];
 }
 
 bool GameEngine::isRunning() { return m_running && window().isOpen(); }
 
-sf::RenderWindow &GameEngine::window() { return m_window; }
+sf::RenderWindow& GameEngine::window() { return m_window; }
 
-void GameEngine::run() {
-  while (isRunning())
-    update();
+void GameEngine::run()
+{
+    while (isRunning())
+        update();
 }
 
-void GameEngine::sUserInput() 
+void GameEngine::sUserInput()
 {
-  sf::Event event{};
-  while (m_window.pollEvent(event)) {
-    if (event.type == sf::Event::Closed)
-      quit();
-    if (event.type == sf::Event::KeyPressed) {
-      if (event.key.code == sf::Keyboard::X) {
-        sf::Texture texture;
-        texture.create(m_window.getSize().x, m_window.getSize().y);
-        texture.update(m_window);
-        if (texture.copyToImage().saveToFile("Assets/screenshots/test.png"))
-          std::cout << "screenshot saved to "
+    sf::Event event{};
+    while (m_window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            quit();
+        if (event.type == sf::Event::KeyPressed)
+        {
+            if (event.key.code == sf::Keyboard::X)
+            {
+                sf::Texture texture;
+                texture.create(m_window.getSize().x, m_window.getSize().y);
+                texture.update(m_window);
+                if (texture.copyToImage().saveToFile("Assets/screenshots/test.png"))
+                    std::cout << "screenshot saved to "
                     << "Assets/screenshots/test.png" << std::endl;
-      }
+            }
+        }
+        if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
+        {
+            // if the current scene does not have an action associated with this key,
+            // skip the event
+            if (currentScene()->getActionMap().find(event.key.code) == currentScene()->getActionMap().end())
+                continue;
+            // determinate start or end action whether it was pres or release
+            eInputActionTypes actionType = (event.type == sf::Event::KeyPressed) ? eInputActionTypes::START : eInputActionTypes::END;
+            // look up the action and send the action to the scene
+            currentScene()->sDoAction(InputAction(currentScene()->getActionMap().at(event.key.code), actionType));
+        }
     }
-    if (event.type == sf::Event::KeyPressed ||
-        event.type == sf::Event::KeyReleased) {
-      // if the current scene does not have an action associated with this key,
-      // skip the event
-      if (currentScene()->getActionMap().find(event.key.code) ==
-          currentScene()->getActionMap().end())
-        continue;
-      // determinate start or end action whether it was pres or release
-      eInputActionTypes actionType = (event.type == sf::Event::KeyPressed)
-                                    ? eInputActionTypes::START
-                                    : eInputActionTypes::END;
-      // look up the action and send the action to the scene
-      currentScene()->sDoAction(InputAction(
-          currentScene()->getActionMap().at(event.key.code), actionType));
-    }
-  }
 }
 
 
@@ -163,21 +97,21 @@ GameEngine* GameEngine::Instance()
     }
 }
 
-void GameEngine::changeScene(std::string scenes,
-                             const std::shared_ptr<Scene> &scene,
-                             bool endCurrentScene) {
-  // review this one
-  m_currentScene = scenes;
-  if (scene)
-    m_sceneMap[scenes] = scene;
+void GameEngine::changeScene(std::string scenes, const std::shared_ptr<Scene>& scene, bool endCurrentScene)
+{
+    // review this one
+    m_currentScene = scenes;
+    if (scene)
+        m_sceneMap[scenes] = scene;
 }
 
-const Assets &GameEngine::getAssets() const { return m_assets; }
+const Assets& GameEngine::getAssets() const { return m_assets; }
 
 void GameEngine::quit() { m_running = false; }
 
-std::shared_ptr<Scene> GameEngine::getScene(std::string scenes) {
-  return m_sceneMap[scenes];
+std::shared_ptr<Scene> GameEngine::getScene(std::string scenes)
+{
+    return m_sceneMap[scenes];
 }
 
 Vec2 GameEngine::gridToMidPixel(float gridX, float gridY, std::shared_ptr<Entity> entity)

@@ -169,6 +169,7 @@
     <ClInclude Include="Engine\Source\Scene.h" />
     <ClInclude Include="Engine\Source\Scene_Menu.h" />
     <ClInclude Include="Engine\Source\Scene_Play.h" />
+    <ClInclude Include="Engine\Source\Transform.h" />
     <ClInclude Include="Engine\Source\Vec2.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClCompile Include="Engine\Source\Scene.cpp" />
     <ClCompile Include="Engine\Source\Scene_Menu.cpp" />
     <ClCompile Include="Engine\Source\Scene_Play.cpp" />
+    <ClCompile Include="Engine\Source\Transform.cpp" />
     <ClCompile Include="Engine\Source\Vec2.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
