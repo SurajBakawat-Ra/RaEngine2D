@@ -1,5 +1,7 @@
 #pragma once
-//#include <memory>
+
+#include "Common.h"
+
 class Entity;
 
 class Vec2 
@@ -10,6 +12,8 @@ public:
 
   Vec2();
   Vec2(float xin, float yin);
+
+  friend std::ostream& operator << (std::ostream& stream, const Vec2& rhs);
 
   bool operator==(const Vec2 &rhs) const;
   bool operator==(float val) const;

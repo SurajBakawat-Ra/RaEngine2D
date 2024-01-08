@@ -165,6 +165,7 @@
     <ClInclude Include="Engine\Source\GameEngine.h" />
     <ClInclude Include="Engine\Source\InputAction.h" />
     <ClInclude Include="Engine\Source\Physics.h" />
+    <ClInclude Include="Engine\Source\Rigidbody.h" />
     <ClInclude Include="Engine\Source\Scene.h" />
     <ClInclude Include="Engine\Source\Scene_Menu.h" />
     <ClInclude Include="Engine\Source\Scene_Play.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Engine\Source\InputAction.cpp" />
     <ClCompile Include="Engine\Source\main.cpp" />
     <ClCompile Include="Engine\Source\Physics.cpp" />
+    <ClCompile Include="Engine\Source\Rigidbody.cpp" />
     <ClCompile Include="Engine\Source\Scene.cpp" />
     <ClCompile Include="Engine\Source\Scene_Menu.cpp" />
     <ClCompile Include="Engine\Source\Scene_Play.cpp" />

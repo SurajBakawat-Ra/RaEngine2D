@@ -14,9 +14,19 @@ void Scene_Play::init(const std::string& menuConfig) {
     m_menuStrings.emplace_back("Menu 2");
     m_menuStrings.emplace_back("Menu 3");
 
-
-    Animation::playAnimationAtPosition("AniBRICK", Vec2(50, 60), "TILE");
-    Animation::playAnimationAtPosition("RUN", Vec2(100, 200), "DYNAMIC");
+    auto brick = GameEngine::Instance()->entityManager.addEntity("TILE");
+    auto brick1 = GameEngine::Instance()->entityManager.addEntity("TILE");
+    auto brick2 = GameEngine::Instance()->entityManager.addEntity("TILE");
+    auto brick3 = GameEngine::Instance()->entityManager.addEntity("TILE");
+    auto brick4 = GameEngine::Instance()->entityManager.addEntity("TILE");
+    auto player = GameEngine::Instance()->entityManager.addEntity("PLAYER");
+    Animation::playAnimationAtPosition(brick, "AniBRICK", Vec2(100, 600));
+    Animation::playAnimationAtPosition(brick1, "AniBRICK", Vec2(200, 600));
+    Animation::playAnimationAtPosition(brick2, "AniBRICK", Vec2(300, 600));
+    Animation::playAnimationAtPosition(brick3, "AniBRICK", Vec2(400, 600));
+    Animation::playAnimationAtPosition(brick4, "AniBRICK", Vec2(500, 600));
+    Animation::playAnimationAtPosition(player, "RUN", Vec2(100, 200));
+    player->addComponents<CRigidbody>(Rigidbody(), 0.1);
 }
 
 void Scene_Play::update() {
@@ -96,6 +106,23 @@ void Scene_Play::sRender()
     GameEngine::Instance()->window().draw(m_menuText);
 
     Animation::renderAnimations();
+
+    if (true) {
+        for (auto& e : GameEngine::Instance()->entityManager.getEntities()) {
+            if (e->hasComponent<CBoundingBox>()) {
+                auto& box = e->getComponent<CBoundingBox>();
+                auto& transform = e->getComponent<CTransform>();
+                sf::RectangleShape rect;
+                rect.setSize(sf::Vector2f(box.size.x - 1, box.size.y - 1));
+                rect.setOrigin(sf::Vector2f(box.size.x / 2, box.size.y / 2));
+                rect.setPosition(transform.getPos().x, transform.getPos().y);
+                rect.setFillColor(sf::Color(0, 0, 0, 0));
+                rect.setOutlineColor(sf::Color(255, 255, 255, 255));
+                rect.setOutlineThickness(1);
+                GameEngine::Instance()->window().draw(rect);
+            }
+        }
+    }
 
     GameEngine::Instance()->window().display();
 }

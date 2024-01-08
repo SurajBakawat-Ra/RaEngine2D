@@ -13,7 +13,7 @@ bool Vec2::operator==(const Vec2 &rhs) const {
 bool Vec2::operator==(const float val) const { return (x == val && y == val); }
 
 bool Vec2::operator!=(const Vec2 &rhs) const {
-  return (x != rhs.x && y != rhs.y);
+  return (x != rhs.x || y != rhs.y);
 }
 
 Vec2 Vec2::operator+(const Vec2 &rhs) const { return {x + rhs.x, y + rhs.y}; }
@@ -48,5 +48,11 @@ float Vec2::dist(const Vec2 &rhs) const {
   return sqrt(pow((x - rhs.x), 2) + pow(y - rhs.y, 2));
 }
 bool Vec2::operator>(const float rhs) const { return ((x > rhs) && (y > rhs)); }
+
+std::ostream& operator<<(std::ostream& stream, const Vec2& rhs)
+{
+	stream << rhs.x << " " << rhs.y;
+	return stream;
+}
 
 

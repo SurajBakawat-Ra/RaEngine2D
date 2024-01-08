@@ -25,6 +25,6 @@ class Animation {
   const Vec2 &getSize() const;
   sf::Sprite &getSprite();
 
-  static void playAnimationAtPosition(std::string animName, Vec2 pos, std::string tag);
+  static void playAnimationAtPosition(std::shared_ptr<Entity> entity, std::string animName, Vec2 pos);
   static void renderAnimations();
 };

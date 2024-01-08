@@ -12,8 +12,8 @@ typedef std::tuple<
     CInput,
     CBoundingBox,
     CAnimation,
-    CGravity,
-    CState>
+    CState,
+    CRigidbody>
     ComponentsTuple;
 
 class Entity {
@@ -28,8 +28,8 @@ class Entity {
                                                  CInput(),
                                                  CBoundingBox(),
                                                  CAnimation(),
-                                                 CGravity(),
-                                                 CState());
+                                                 CState(),
+                                                 CRigidbody(Rigidbody(), .1f));
 
   // constructor is private se we can never create
   // entities outside the EntityManager which had friend access

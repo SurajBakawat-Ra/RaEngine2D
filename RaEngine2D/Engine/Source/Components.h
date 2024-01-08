@@ -1,5 +1,6 @@
 #pragma once
 #include "Animation.h"
+#include "Rigidbody.h"
 #include "Assets.h"
 
 class Components {
@@ -7,20 +8,68 @@ class Components {
   bool has = false;
 };
 
-class CTransform : public Components {
-  public:
-  Vec2 pos = {0.0, 0.0};
-  Vec2 prevPos = {0.0, 0.0};
-  Vec2 scale = {1.0, 1.0};
-  Vec2 velocity = {0.0, 0.0};
-  float angle = 0;
-  float aimPos = 0;
+//class CTransform : public Components
+//{
+//
+//private:
+//    Vec2 m_pos = { 0.0, 0.0 };
+//    Vec2 m_prevPos = { 0.0, 0.0 };
+//
+//public:
+//    void SetPosition(const Vec2& p) { m_prevPos = m_pos;  m_pos = p; }
+//    const Vec2& pos = m_pos;
+//    const Vec2& prevPos = m_prevPos;
+//
+//    Vec2 scale = { 1.0, 1.0 };
+//    Vec2 velocity = { 0.0, 0.0 };
+//    float angle = 0;
+//    float aimPos = 0;
+//
+//    CTransform() = default;
+//    explicit CTransform(const Vec2& p)
+//        : m_pos(p) {}
+//    CTransform(const Vec2& p, const Vec2& sp, const Vec2& sc, float a)
+//        : m_pos(p), m_prevPos(p), velocity(sp), scale(sc), angle(a) {}
+//
+//    CTransform& operator=(const CTransform& other)
+//    {
+//        if (this != &other)
+//        {
+//            m_pos = other.m_pos;
+//            m_prevPos = other.m_prevPos;
+//            scale = other.scale;
+//            velocity = other.velocity;
+//            angle = other.angle;
+//            aimPos = other.aimPos;
+//        }
+//        return *this;
+//    }
+//};
 
-  CTransform() = default;
-  explicit CTransform(const Vec2 &p)
-      : pos(p) {}
-  CTransform(const Vec2 &p, const Vec2 &sp, const Vec2 &sc, float a)
-      : pos(p), prevPos(p), velocity(sp), scale(sc), angle(a) {}
+class CTransform : public Components 
+{
+private:
+    Vec2 pos = { 0.0, 0.0 };
+    Vec2 prevPos = { 0.0, 0.0 };
+
+public:
+    void SetPosition(const Vec2& p) 
+    {
+        prevPos = pos;
+        pos = p;
+    }
+    const Vec2& getPos() const { return pos; }
+    const Vec2& getPrevPos() const { return prevPos; }
+    Vec2 scale = { 1.0, 1.0 };
+    Vec2 velocity = { 0.0, 0.0 };
+    float angle = 0;
+    float aimPos = 0;
+
+    CTransform() = default;
+    explicit CTransform(const Vec2& p)
+        : pos(p) {}
+    CTransform(const Vec2& p, const Vec2& sp, const Vec2& sc, float a)
+        : pos(p), prevPos(p), velocity(sp), scale(sc), angle(a) {}
 };
 
 class CBoundingBox : public Components {
@@ -62,13 +111,6 @@ class CAnimation : public Components {
       : animation(animation), repeat(r) {}
 };
 
-class CGravity : public Components {
-  public:
-  CGravity() {}
-  float gravity;
-  int knockback;
-  CGravity(float g, int kb) : gravity(g), knockback(kb) {}
-};
 
 class CState : public Components {
   public:
@@ -78,4 +120,17 @@ class CState : public Components {
   size_t frames = 0;
   bool notGrounded = true;
   explicit CState(std::string&s) : state(s) {}
+};
+
+class CRigidbody : public Components 
+{
+public:
+	CRigidbody(const Rigidbody& r, float g) : rigidbody(r), gravity(g) {}
+    Rigidbody rigidbody;
+	float gravity;
+    float mass;
+    bool isKinematic;
+    bool freezeRotation;
+    bool useGravity;
+    float maxVelocity = 10.f;
 };
