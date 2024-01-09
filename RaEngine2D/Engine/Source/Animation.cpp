@@ -36,32 +36,3 @@ std::string Animation::getName() const { return m_name; }
 const Vec2& Animation::getSize() const { return m_size; }
 
 sf::Sprite& Animation::getSprite() { return m_sprite; }
-
-void Animation::playAnimationAtPosition(std::shared_ptr<Entity> entity, std::string animName, Vec2 pos)
-{
-    //auto entity = GameEngine::Instance()->entityManager.addEntity(tag);
-    entity->addComponents<CAnimation>(GameEngine::Instance()->getAssets().getAnimation(animName), true);
-    entity->addComponents<CTransform>(GameEngine::gridToMidPixel((float)pos.x, (float)pos.y, entity));
-    if (entity->tag() == "TILE")
-        entity->addComponents<CBoundingBox>(entity->getComponent<CAnimation>().animation.getSize());
-    else if (entity->tag() == "PLAYER")
-        entity->addComponents<CBoundingBox>(entity->getComponent<CAnimation>().animation.getSize() / 1.25f);
-}
-
-void Animation::renderAnimations()
-{
-    for (auto& e : GameEngine::Instance()->entityManager.getEntities())
-    {
-        auto& transform = e->getComponent<CTransform>();
-        if (e->hasComponent<CAnimation>())
-        {
-            auto& animation = e->getComponent<CAnimation>().animation;
-            animation.getSprite().setRotation(transform.angle);
-            animation.getSprite().setPosition(transform.getPos().x, transform.getPos().y);
-            animation.getSprite().setScale(transform.scale.x, transform.scale.y);
-            animation.getSprite().setColor(sf::Color(animation.getSprite().getColor().r, animation.getSprite().getColor().g, animation.getSprite().getColor().b, 255));
-            GameEngine::Instance()->window().draw(animation.getSprite());
-            animation.update();
-        }
-    }
-}

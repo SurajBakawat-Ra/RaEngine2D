@@ -4,9 +4,9 @@
 #include "GameEngine.h"
 #include "Scene_Play.h"
 
-Scene_Menu::Scene_Menu() : Scene() { init(""); }
+Scene_Menu::Scene_Menu() : Scene() { init(); }
 
-void Scene_Menu::init(const std::string& menuConfig)
+void Scene_Menu::init()
 {
     GameEngine::Instance()->window().setKeyRepeatEnabled(false);
     m_menuText.setFont(GameEngine::Instance()->getAssets().getFont("PIXEL"));
@@ -19,7 +19,6 @@ void Scene_Menu::init(const std::string& menuConfig)
 void Scene_Menu::update()
 {
     sRender();
-    GameEngine::Instance()->entityManager.update();
     sUserInput();
 }
 
@@ -75,7 +74,6 @@ void Scene_Menu::sUserInput()
 
 void Scene_Menu::sRender()
 {
-    GameEngine::Instance()->window().clear(sf::Color(100, 27, 0));
     // drawing the game title in the top-left of the screen
     m_menuText.setString(m_title);
     m_menuText.setCharacterSize(32);
@@ -86,11 +84,8 @@ void Scene_Menu::sRender()
     for (size_t i = 0; i < m_menuStrings.size(); i++)
     {
         m_menuText.setString(m_menuStrings.at(i));
-        m_menuText.setFillColor(i == m_selectedMenuIndex ? sf::Color::White
-            : sf::Color::Black);
-        m_menuText.setPosition(sf::Vector2f(GameEngine::Instance()->window().getSize().x / 2 -
-            m_menuText.getCharacterSize() * 2,
-            250 + i * 72));
+        m_menuText.setFillColor(i == m_selectedMenuIndex ? sf::Color::White : sf::Color::Black);
+        m_menuText.setPosition(sf::Vector2f(GameEngine::Instance()->window().getSize().x / 2 - m_menuText.getCharacterSize() * 2, 250 + i * 72));
         GameEngine::Instance()->window().draw(m_menuText);
     }
 

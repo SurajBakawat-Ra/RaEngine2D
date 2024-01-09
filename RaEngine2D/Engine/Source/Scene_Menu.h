@@ -17,7 +17,7 @@ public:
 	sf::Text m_menuText;
 	size_t m_selectedMenuIndex = 0;
 
-	void init(const std::string& menuConfig);
+	void init();
 	void update() override;
 	void sUserInput();
 	void sRender() override;

@@ -33,3 +33,64 @@ Vec2 Physics::GetPreviousOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Enti
 
 	return { overlapX, overlapY };
 }
+
+bool Physics::CheckCollisionDown(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
+{
+    Physics p;
+
+    return p.CheckCollisionSide(a, b, false, true, false, false);
+}
+
+bool Physics::CheckCollisionSide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b, bool up = false, bool down = false, bool left = false, bool right = false)
+{
+    if (a->id() != b->id() && GetOverlap(a, b).x > 0.f && GetOverlap(a, b).y > 0.f)
+    {
+        bool xOverlap = false;
+        bool yOverlap = false;
+
+        if (GetPreviousOverlap(a, b).x > 0.f)
+        {
+            yOverlap = true;
+        }
+        else
+        {
+            xOverlap = true;
+        }
+
+        if (yOverlap)
+        {
+            auto& transform = a->getComponent<CTransform>();
+
+            if (transform.getPos().y < b->getComponent<CTransform>().getPos().y)
+            {
+                if (down)
+                    return true;
+            }
+
+            if (transform.getPos().y > b->getComponent<CTransform>().getPos().y)
+            {
+                if (up)
+                    return true;
+            }
+        }
+
+        if (xOverlap)
+        {
+            auto& transform = a->getComponent<CTransform>();
+
+            if (transform.getPos().x < b->getComponent<CTransform>().getPos().x)
+            {
+                if (right)
+                    return true;
+            }
+
+            if (transform.getPos().x > b->getComponent<CTransform>().getPos().x)
+            {
+                if (left)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}

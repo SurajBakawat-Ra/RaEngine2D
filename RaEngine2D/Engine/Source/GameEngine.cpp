@@ -8,12 +8,16 @@
 #include <iostream>
 #include "Physics.h"
 #include "Transform.h"
+#include "Render.h"
 
 GameEngine* GameEngine::m_Instance = nullptr;
 
 void GameEngine::update()
 {
+    Render r;
+    r.update();
     sUserInput();
+    entityManager.update();
     m_sceneMap.at(m_currentScene)->update();
 
     Transform t;
@@ -62,8 +66,7 @@ void GameEngine::sUserInput()
                 texture.create(m_window.getSize().x, m_window.getSize().y);
                 texture.update(m_window);
                 if (texture.copyToImage().saveToFile("Assets/screenshots/test.png"))
-                    std::cout << "screenshot saved to "
-                    << "Assets/screenshots/test.png" << std::endl;
+                    std::cout << "screenshot saved to " << "Assets/screenshots/test.png" << std::endl;
             }
         }
         if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
