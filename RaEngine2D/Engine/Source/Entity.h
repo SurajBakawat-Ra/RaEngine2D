@@ -16,6 +16,8 @@ typedef std::tuple<
     CRigidbody>
     ComponentsTuple;
 
+typedef std::tuple<std::shared_ptr<Entity>, bool, bool, bool, bool> CollisionInfo;
+
 class Entity
 {
     friend class EntityManager;
@@ -42,14 +44,17 @@ public:
     size_t id() const;
     bool isActive() const;
     std::string tag() const;
+	CollisionInfo collisionInfo = std::make_tuple(nullptr, false, false, false, false);
 
     template<typename T>
-    bool hasComponent() {
+    bool hasComponent() 
+    {
         return getComponent<T>().has;
     }
 
     template<typename T, typename... TArgs>
-    T& addComponents(TArgs &&...mArgs) {
+    T& addComponents(TArgs &&...mArgs) 
+    {
         auto& component = getComponent<T>();
         component = T(std::forward<TArgs>(mArgs)...);
         component.has = true;

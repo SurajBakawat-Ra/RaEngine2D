@@ -18,7 +18,7 @@ public:
     bool operator==(const Vec2& rhs) const;
     bool operator==(float val) const;
     bool operator!=(const Vec2& rhs) const;
-    bool operator>(const float rhs) const;
+    bool operator>(const Vec2& rhs) const;
 
     Vec2 operator+(const Vec2& rhs)
         const; // const after sig. means : that function will not be allowed

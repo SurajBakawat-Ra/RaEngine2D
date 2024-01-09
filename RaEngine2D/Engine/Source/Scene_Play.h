@@ -17,6 +17,9 @@ public:
 	sf::Text m_menuText;
 	size_t m_selectedMenuIndex = 0;
 
+	std::shared_ptr<Entity> m_player;
+	std::shared_ptr<Entity> m_playerFeet;
+
 	void init();
 	void update() override;
 	void sUserInput();
@@ -24,6 +27,7 @@ public:
 	void onEnd() override;
 	void sDoAction(const InputAction& action) override;
 	void sMovement();
+	bool isPlayerGrounded();
 
 public:
 	explicit Scene_Play();

@@ -14,6 +14,8 @@ GameEngine* GameEngine::m_Instance = nullptr;
 
 void GameEngine::update()
 {
+    Physics physics;
+    physics.update();
     Render r;
     r.update();
     sUserInput();
@@ -22,6 +24,11 @@ void GameEngine::update()
 
     Transform t;
     t.update();
+
+    for (auto& e : entityManager.getEntities())
+    {
+		e->collisionInfo = std::make_tuple<>(nullptr, false, false, false, false);
+    }
 
     m_currentFrames++;
 }

@@ -55,7 +55,7 @@ float Vec2::dist(const Vec2& rhs) const
 	return sqrt(pow((x - rhs.x), 2) + pow(y - rhs.y, 2));
 }
 
-bool Vec2::operator>(const float rhs) const { return ((x > rhs) && (y > rhs)); }
+bool Vec2::operator>(const Vec2& rhs) const { return ((x > rhs.x) && (y > rhs.y)); }
 
 std::ostream& operator<<(std::ostream& stream, const Vec2& rhs)
 {

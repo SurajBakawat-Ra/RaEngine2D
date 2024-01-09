@@ -29,9 +29,9 @@ public:
     float angle = 0;
     float aimPos = 0;
 
-    CTransform() = default;
-    explicit CTransform(const Vec2& p) : pos(p) {}
-    CTransform(const Vec2& p, const Vec2& sp, const Vec2& sc, float a) : pos(p), prevPos(p), velocity(sp), scale(sc), angle(a) {}
+    CTransform() { SetPosition(getPos()); }
+    explicit CTransform(const Vec2& p) : pos(p) { SetPosition(getPos()); }
+    CTransform(const Vec2& p, const Vec2& sp, const Vec2& sc, float a) : pos(p), prevPos(p), velocity(sp), scale(sc), angle(a) { SetPosition(getPos()); }
 };
 
 

@@ -1,5 +1,19 @@
 #include "Physics.h"
 #include "Vec2.h"
+#include "GameEngine.h"
+#include <cmath>
+
+void Physics::update()
+{
+    for (auto& e : GameEngine::Instance()->entityManager.getEntities())
+    {
+        for (auto& e2 : GameEngine::Instance()->entityManager.getEntities())
+        {
+            if(e->id() != e2->id())
+                CheckCollisions(e, e2);
+        }
+    }
+}
 
 Vec2 Physics::GetOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
 {
@@ -34,14 +48,47 @@ Vec2 Physics::GetPreviousOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Enti
 	return { overlapX, overlapY };
 }
 
-bool Physics::CheckCollisionDown(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
+std::shared_ptr<Entity> Physics::IsCollidingDown(std::shared_ptr<Entity> a)
 {
-    Physics p;
-
-    return p.CheckCollisionSide(a, b, false, true, false, false);
+    if (std::get<0>(a->collisionInfo) != nullptr)
+    {
+		if (std::get<2>(a->collisionInfo))
+			return std::get<0>(a->collisionInfo);
+    }
+    return nullptr;
 }
 
-bool Physics::CheckCollisionSide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b, bool up = false, bool down = false, bool left = false, bool right = false)
+std::shared_ptr<Entity> Physics::IsCollidingUp(std::shared_ptr<Entity> a)
+{
+    if (std::get<0>(a->collisionInfo) != nullptr)
+    {
+        if (std::get<1>(a->collisionInfo))
+            return std::get<0>(a->collisionInfo);
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Entity> Physics::IsCollidingLeft(std::shared_ptr<Entity> a)
+{
+    if (std::get<0>(a->collisionInfo) != nullptr)
+    {
+        if (std::get<3>(a->collisionInfo))
+            return std::get<0>(a->collisionInfo);
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Entity> Physics::IsCollidingRight(std::shared_ptr<Entity> a)
+{
+    if (std::get<0>(a->collisionInfo) != nullptr)
+    {
+        if (std::get<4>(a->collisionInfo))
+            return std::get<0>(a->collisionInfo);
+    }
+    return nullptr;
+}
+
+void Physics::CheckCollisions(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
 {
     if (a->id() != b->id() && GetOverlap(a, b).x > 0.f && GetOverlap(a, b).y > 0.f)
     {
@@ -52,10 +99,15 @@ bool Physics::CheckCollisionSide(std::shared_ptr<Entity> a, std::shared_ptr<Enti
         {
             yOverlap = true;
         }
-        else
+        if (GetPreviousOverlap(a, b).y > 0.f)
         {
             xOverlap = true;
         }
+
+        bool up = false;
+        bool down = false;
+        bool left = false;
+        bool right = false;
 
         if (yOverlap)
         {
@@ -63,14 +115,16 @@ bool Physics::CheckCollisionSide(std::shared_ptr<Entity> a, std::shared_ptr<Enti
 
             if (transform.getPos().y < b->getComponent<CTransform>().getPos().y)
             {
-                if (down)
-                    return true;
+                if (a->tag() == "PLAYER")
+                std::cout << "down" << std::endl;
+                down = true;
             }
 
             if (transform.getPos().y > b->getComponent<CTransform>().getPos().y)
             {
-                if (up)
-                    return true;
+                if(a->tag() == "PLAYER")
+                std::cout << "up" << std::endl;
+                up = true;
             }
         }
 
@@ -80,17 +134,20 @@ bool Physics::CheckCollisionSide(std::shared_ptr<Entity> a, std::shared_ptr<Enti
 
             if (transform.getPos().x < b->getComponent<CTransform>().getPos().x)
             {
-                if (right)
-                    return true;
+                if (a->tag() == "PLAYER")
+                std::cout << "right" << std::endl;
+                right = true;
             }
 
             if (transform.getPos().x > b->getComponent<CTransform>().getPos().x)
             {
-                if (left)
-                    return true;
+                if (a->tag() == "PLAYER")
+				std::cout << "left" << std::endl; 
+                left = true;
             }
         }
-    }
 
-    return false;
+        a->collisionInfo = std::make_tuple<>(b, up, down, left, right);
+    }
 }
+

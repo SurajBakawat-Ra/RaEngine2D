@@ -13,123 +13,42 @@ void Transform::update()
         }
     }
 
-    Physics physics;
 
     for (auto& e : GameEngine::Instance()->entityManager.getEntities())
     {
-        if (e->tag() == "PLAYER")
+        auto& transform = e->getComponent<CTransform>();
+        if (e->hasComponent<CAnimation>())
         {
-            auto& transform = e->getComponent<CTransform>();
+            auto& animation = e->getComponent<CAnimation>().animation;
 
-            //std::cout << "AAAAA" << transform.velocity << std::endl;
-        }
-    }
-
-
-
-    for (auto& e : GameEngine::Instance()->entityManager.getEntities())
-    {
-        for (auto& e2 : GameEngine::Instance()->entityManager.getEntities())
-        {
-            if (e->id() != e2->id() && (physics.GetOverlap(e, e2).x > 0.f && physics.GetOverlap(e, e2).y > 0.f))
+            if (transform.velocity != Vec2(0.f, 0.f))
             {
-                //std::string s = std::to_string(e->id()) + " " + std::to_string(e2->id()) + " " + std::to_string(e->getComponent<CTransform>().getPos().x) + " " + std::to_string(e->getComponent<CTransform>().getPos().y)
-    //                + " " + std::to_string(e2->getComponent<CTransform>().getPos().x) + " " + std::to_string(e2->getComponent<CTransform>().getPos().y) + " " +
-    //                std::to_string(physics.GetOverlap(e, e2).x) + " " + std::to_string(physics.GetOverlap(e, e2).y);
-                //std::cout << s;
-
-                bool xOverlap = false;
-                bool yOverlap = false;
-
-                if (physics.GetPreviousOverlap(e, e2).x > 0.f)
-                {
-                    yOverlap = true;
-                }
-                else
-                {
-                    xOverlap = true;
-                }
-
-                if (yOverlap)
-                {
-                    auto& transform = e->getComponent<CTransform>();
-
-					bool resetVelocity = true;
-
-                    if (transform.getPos().y < e2->getComponent<CTransform>().getPos().y)
-                    {
-                        if (transform.velocity.y < 0.f)
-                        {
-                            resetVelocity = false;
-                        }
-                    }
-
-                    if (transform.getPos().y > e2->getComponent<CTransform>().getPos().y)
-                    {
-                        if (transform.velocity.y > 0.f)
-                        {
-                            resetVelocity = false;
-                        }
-                    }
-
-                    transform.SetPosition(transform.getPrevPos());
-                    
-                    if(resetVelocity)
-                        transform.velocity.y = 0.f;
-
-                }
-
-                if (xOverlap)
-                {
-                    auto& transform = e->getComponent<CTransform>();
-
-                    bool resetVelocity = true;
-
-                    if (transform.getPos().x < e2->getComponent<CTransform>().getPos().x)
-                    {
-                        if (transform.velocity.x < 0.f)
-                        {
-                            resetVelocity = false;
-                        }
-                    }
-
-                    if (transform.getPos().x > e2->getComponent<CTransform>().getPos().x)
-                    {
-                        if (transform.velocity.x > 0.f)
-                        {
-                            resetVelocity = false;
-                        }
-                    }
-
-                    transform.SetPosition(transform.getPrevPos());
-                    transform.velocity.x = 0.f;
-                }
+                transform.SetPosition(Vec2(transform.getPos().x + transform.velocity.x, transform.getPos().y + transform.velocity.y));
             }
+
+            animation.getSprite().setRotation(transform.angle);
+            animation.getSprite().setPosition(transform.getPos().x, transform.getPos().y);
+            animation.getSprite().setScale(transform.scale.x, transform.scale.y);
         }
     }
 
-    if (true)//gravity
+    for (auto& e : GameEngine::Instance()->entityManager.getEntities())
     {
-        for (auto& e : GameEngine::Instance()->entityManager.getEntities())
+        if (!e->hasComponent<CRigidbody>())
+            continue;
+
+        auto& transform = e->getComponent<CTransform>();
+
+        if (Physics::IsCollidingLeft(e) || Physics::IsCollidingRight(e))
         {
-            auto& transform = e->getComponent<CTransform>();
-            if (e->hasComponent<CAnimation>()) {
-                auto& animation = e->getComponent<CAnimation>().animation;
-
-                if (e->tag() == "PLAYER")
-                {
-                    //std::cout << transform.velocity << std::endl;
-                }
-
-                if (transform.velocity != Vec2(0.f, 0.f))
-                {
-                    transform.SetPosition(Vec2(transform.getPos().x + transform.velocity.x, transform.getPos().y + transform.velocity.y));
-                }
-
-                animation.getSprite().setRotation(transform.angle);
-                animation.getSprite().setPosition(transform.getPos().x, transform.getPos().y);
-                animation.getSprite().setScale(transform.scale.x, transform.scale.y);
-            }
+            transform.velocity.x = 0.f;
+            transform.SetPosition(Vec2(transform.getPos().x + Physics::GetOverlap(e, std::get<0>(e->collisionInfo)).x, transform.getPos().y));
+        }
+        if (Physics::IsCollidingDown(e) || Physics::IsCollidingUp(e))
+        {
+            transform.velocity.y = 0.f;
+            transform.SetPosition(Vec2(transform.getPos().x, transform.getPos().y - Physics::GetOverlap(e, std::get<0>(e->collisionInfo)).y));
         }
     }
 }
+

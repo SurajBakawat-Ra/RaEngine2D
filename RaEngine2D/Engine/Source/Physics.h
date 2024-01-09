@@ -9,15 +9,19 @@ class Physics
 private:
 	Physics() {}
 
-	friend class Transform;
+	friend class GameEngine;
 
-	bool CheckCollisionSide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b, bool up, bool down, bool left, bool right);
+	void CheckCollisions(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
+
 
 public:
-	Vec2 GetOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
-	Vec2 GetPreviousOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
+	void update();
 
-	static bool CheckCollisionDown(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
+	static Vec2 GetOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
+	static Vec2 GetPreviousOverlap(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
 
-
+	static std::shared_ptr<Entity> IsCollidingDown(std::shared_ptr<Entity> a);
+	static std::shared_ptr<Entity> IsCollidingUp(std::shared_ptr<Entity> a);
+	static std::shared_ptr<Entity> IsCollidingLeft(std::shared_ptr<Entity> a);
+	static std::shared_ptr<Entity> IsCollidingRight(std::shared_ptr<Entity> a);
 };
